@@ -1,0 +1,50 @@
+
+It looks like the compilation is still failing due to the missing header file numpy/arrayobject.h. This file is necessary for interfacing with NumPy arrays in your Cython code.
+
+Since you are using a Conda environment, it's possible that the NumPy headers are not in the expected location. In Conda environments, the necessary header files for NumPy are usually included with the NumPy package itself. However, the location can vary.
+
+Here's a step-by-step guide to address the issue:
+
+Find the NumPy Include Directory:
+Use the following command to find the location of NumPy's include directory:
+
+bash
+Copy code
+python -c "import numpy; print(numpy.get_include())"
+This will print the path to the numpy directory containing the necessary header files.
+
+Specify Include Path:
+Use the obtained path to specify the include path explicitly when running cythonize. For example:
+
+bash
+Copy code
+CFLAGS="-I/path/to/numpy/headers" cythonize -i compute_overlap.pyx
+Replace /path/to/numpy/headers with the actual path to the directory containing numpy/arrayobject.h.
+
+If the obtained path is similar to /home/arshad/anaconda3/envs/809k/lib/python3.6/site-packages/numpy/core/include, you can use:
+
+bash
+Copy code
+CFLAGS="-I/home/arshad/anaconda3/envs/809k/lib/python3.6/site-packages/numpy/core/include" cythonize -i compute_overlap.pyx
+Recompile Cython Code:
+After specifying the include path, try recompiling the Cython code:
+
+bash
+Copy code
+cythonize -i compute_overlap.pyx
+Clean Build Files:
+If the issue persists, clean the build files and try again:
+
+bash
+Copy code
+rm -rf build/
+cythonize -i compute_overlap.pyx
+Ensure that your Conda environment is activated before running these commands.
+
+This should resolve the issue by providing the correct include path for the NumPy headers during the Cython compilation process. If you still encounter problems, please double-check the obtained NumPy include path and make sure it points to the correct directory containing the required header files.
+
+
+
+
+
+
